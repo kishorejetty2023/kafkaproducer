@@ -7,6 +7,6 @@ spring:
       bootstrap-server: localhost:9092
 app:
   kafka:
-    topic-name: allgood1
+    topic-name: testTopic
     partitions: 6
     replicationFactor: 1
