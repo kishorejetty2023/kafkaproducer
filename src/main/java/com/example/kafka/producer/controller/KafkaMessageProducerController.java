@@ -1,15 +1,15 @@
 package com.example.kafka.producer.controller;
 
+import com.example.kafka.producer.dto.Customer;
 import com.example.kafka.producer.service.KafkaMessagePublisher;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.IntStream;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/producer")
 public class KafkaMessageProducerController {
@@ -34,6 +34,21 @@ public class KafkaMessageProducerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .build();
 
+        }
+    }
+
+    @PostMapping("/sendEvents")
+    public ResponseEntity<String> sendEvents(@RequestBody Customer customer){
+
+        try {
+            kafkaMessagePublisher.sendEventsToTopic(customer);
+            return ResponseEntity.ok("Published Event successfully");
+        }
+        catch (Exception ex){
+
+            log.error("unable to send Message : {} with Exception {} ",customer.toString(),ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
         }
     }
 
